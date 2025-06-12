@@ -31,6 +31,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: "General",
     },
+    stock:{
+      type:Number,
+      default:0,
+    }
   },
   {
     timestamps: true,
