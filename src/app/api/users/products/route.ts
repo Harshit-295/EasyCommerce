@@ -23,16 +23,14 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
 
     const file = formData.get("file") as File | null;
-    const user = formData.get("user");
     const name = formData.get("name");
     const size = formData.get("size");
-    const price = formData.get("price");
+    const price = Number(formData.get("price"));
     const category = formData.get("category");
-    const stock = formData.get("stock");
+    const stock = Number(formData.get("stock"));
+    const description = formData.get("description");
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    
 
     if (!file) {
       return NextResponse.json({ error: "Image file not found" }, { status: 400 });
@@ -59,6 +57,7 @@ export async function POST(request: NextRequest) {
       image: result.secure_url,
       category,
       stock,
+      description,
     });
 
     const savedProduct = await newProduct.save();

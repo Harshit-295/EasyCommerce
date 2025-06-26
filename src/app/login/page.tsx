@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useCart } from "@/contexts/CartContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { fetchCart } = useCart();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -15,8 +17,14 @@ export default function LoginPage() {
   const onLogin = async () => {
     try {
       const response = await axios.post("/api/users/login", user);
-      toast.success("Login successful! Redirecting...");
-      router.push("/profile");
+      const { isAdmin } = response.data;
+
+      if (isAdmin) {
+      router.push("/admin");
+      } else {
+      fetchCart();
+      router.push("/home");
+    };
     } catch (error: any) {
       toast.error("Login failed: " + (error?.response?.data?.message || error.message));
     }
